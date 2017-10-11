@@ -1,9 +1,10 @@
 #include "MicroManager.h"
 #include "CCBot.h"
 #include "Util.h"
+#include "OverlordManager.h"
+#include "Common.h"
 
-MicroManager::MicroManager(CCBot & bot)
-    : m_bot(bot)
+MicroManager::MicroManager(CCBot & bot) : m_bot(bot)
 {
 }
 

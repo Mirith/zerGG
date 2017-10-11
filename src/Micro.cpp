@@ -29,14 +29,6 @@ void Micro::SmartRightClick(const UnitTag & unit, const UnitTag & target, CCBot 
     bot.Actions()->UnitCommand(unit, sc2::ABILITY_ID::SMART, target);
 }
 
-void Micro::OverlordSpread(const UnitTag & moomoo, const sc2::Point2D & place, CCBot & bot)
-{
-	// moomoo is overlord
-	// Whee is move method
-	// place is destination
-	bot.Actions()->Whee(moomoo, place);
-}
-
 void Micro::SmartRepair(const UnitTag & unit, const UnitTag & target, CCBot & bot)
 {
     bot.Actions()->UnitCommand(unit, sc2::ABILITY_ID::SMART, target);

@@ -97,6 +97,9 @@
     <ClCompile Include="..\src\TechTree.cpp">
       <Filter>util</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\OverlordManager.cpp">
+      <Filter>micro</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BaseLocationManager.h">
@@ -199,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="..\src\TechTree.h">
       <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\OverlordManager.h">
+      <Filter>micro</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

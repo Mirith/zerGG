@@ -18,7 +18,8 @@ void WorkerManager::onStart()
 
 void WorkerManager::onFrame()
 {
-    m_workerData.updateAllWorkerData();
+
+	m_workerData.updateAllWorkerData();
     handleGasWorkers();
     handleIdleWorkers();
 

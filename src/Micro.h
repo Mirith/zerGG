@@ -12,7 +12,6 @@ namespace Micro
     void SmartAttackMove(const UnitTag & attacker,  const sc2::Point2D & targetPosition, CCBot & bot);
     void SmartMove      (const UnitTag & attacker,  const sc2::Point2D & targetPosition, CCBot & bot);
     void SmartRightClick(const UnitTag & unit,      const UnitTag & target, CCBot & bot);
-	void OverlordSpread(const UnitTag & moomoo, const sc2::Point2D & place, CCBot & bot);
     void SmartRepair    (const UnitTag & unit,      const UnitTag & target, CCBot & bot);
     void SmartKiteTarget(const UnitTag & rangedUnit,const UnitTag & target, CCBot & bot);
     void SmartBuild     (const UnitTag & builder,   const sc2::UnitTypeID & buildingType, sc2::Point2D pos, CCBot & bot);
