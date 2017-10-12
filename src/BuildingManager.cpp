@@ -3,6 +3,9 @@
 #include "Micro.h"
 #include "CCBot.h"
 #include "Util.h"
+#include <string>
+
+bool LairPresent = FALSE;
 
 BuildingManager::BuildingManager(CCBot & bot)
     : m_bot(bot)
@@ -39,6 +42,8 @@ void BuildingManager::onFrame()
     checkForStartedConstruction();          // check to see if any buildings have started construction and update data structures    
     checkForDeadTerranBuilders();           // if we are terran and a building is under construction without a worker, assign a new one    
     checkForCompletedBuildings();           // check to see if any buildings have completed and update data structures
+
+	UpgradeBuilding(sc2::ABILITY_ID::MORPH_LAIR, m_bot);
 
     drawBuildingInformation();
 }
@@ -441,4 +446,50 @@ void BuildingManager::removeBuildings(const std::vector<Building> & toRemove)
             m_buildings.erase(it);
         }
     }
+}
+
+
+// upgrades a building to specified upgrade
+// add which building type to be upgraded
+// @building		the building to be upgraded
+// @upgrade			the upgrade to be performed
+// @bot				bot thing, important thing
+void BuildingManager::UpgradeBuilding(const sc2::ABILITY_ID upgrade, CCBot & bot)
+{
+
+	if (LairPresent)
+	{
+		return;
+	}
+
+	// cycles through all units, units include buildings too
+	for (auto & unitTag : bot.UnitInfo().getUnits(Players::Self))
+	{
+		// looks for a lair already present
+		// returns if so -- no need to upgrade multiple ones
+		if (bot.GetUnit(unitTag)->unit_type == sc2::UNIT_TYPEID::ZERG_LAIR)
+		{
+			LairPresent = TRUE;
+			return;
+		}
+
+		// looks if building is a hatchery, and if there isn't a lair already on the map
+		// upgrades it if it is
+		if (bot.GetUnit(unitTag)->unit_type == sc2::UNIT_TYPEID::ZERG_HATCHERY && LairPresent == FALSE)
+		{
+			bot.Actions()->UnitCommand(unitTag, upgrade);
+		}
+	}
+	
+}
+
+// makes a nydus network point in enemy base
+// @nydus			the existing network in your base
+// @enemyBaseCoord	where in the enemy base to build the new network
+// @bot				bot thing, necessary thing
+void BuildingManager::MakeNydusNetwork(const UnitTag & nydus, sc2::Point2D & enemyBaseCoord, CCBot & bot)
+{
+	// if nydus is built in base, then build one in enemy base
+	// inverse of coordinates for 2player maps? 
+	bot.Actions()->UnitCommand(nydus, sc2::ABILITY_ID::BUILD_NYDUSNETWORK, enemyBaseCoord);
 }

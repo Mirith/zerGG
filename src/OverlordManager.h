@@ -11,6 +11,5 @@ namespace OverlordManager
 	void GenerateCreep(const UnitTag & moomoo, CCBot & bot);
 	void Scout(const UnitTag & scout, const sc2::Point2D & place, CCBot & bot);
 	void Execute(CCBot & bot);
-
 }
 

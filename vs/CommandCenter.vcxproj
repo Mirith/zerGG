@@ -302,6 +302,7 @@
     <ClCompile Include="..\src\MicroManager.cpp" />
     <ClCompile Include="..\src\OverlordManager.cpp" />
     <ClCompile Include="..\src\ProductionManager.cpp" />
+    <ClCompile Include="..\src\QueenManager.cpp" />
     <ClCompile Include="..\src\RangedManager.cpp" />
     <ClCompile Include="..\src\ScoutManager.cpp" />
     <ClCompile Include="..\src\Squad.cpp" />
@@ -339,6 +340,7 @@
     <ClInclude Include="..\src\MicroManager.h" />
     <ClInclude Include="..\src\OverlordManager.h" />
     <ClInclude Include="..\src\ProductionManager.h" />
+    <ClInclude Include="..\src\QueenManager.h" />
     <ClInclude Include="..\src\RangedManager.h" />
     <ClInclude Include="..\src\ScoutManager.h" />
     <ClInclude Include="..\src\Squad.h" />
