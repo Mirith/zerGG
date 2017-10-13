@@ -21,7 +21,7 @@ class BuildingManager
 
 	void UpgradeBuilding(const sc2::ABILITY_ID upgrade, CCBot & bot);
 
-	void MakeNydusNetwork(const UnitTag & nydus, sc2::Point2D & enemyBaseCoord, CCBot & bot);
+	void MakeNydusNetwork(sc2::Point2D & enemyBaseCoord, CCBot & bot);
 
     void            validateWorkersAndBuildings();		    // STEP 1
     void            assignWorkersToUnassignedBuildings();	// STEP 2

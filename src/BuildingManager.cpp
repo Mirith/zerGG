@@ -44,6 +44,7 @@ void BuildingManager::onFrame()
     checkForCompletedBuildings();           // check to see if any buildings have completed and update data structures
 
 	UpgradeBuilding(sc2::ABILITY_ID::MORPH_LAIR, m_bot);
+	MakeNydusNetwork(sc2::Point2D(40, 50), m_bot);
 
     drawBuildingInformation();
 }
@@ -487,9 +488,21 @@ void BuildingManager::UpgradeBuilding(const sc2::ABILITY_ID upgrade, CCBot & bot
 // @nydus			the existing network in your base
 // @enemyBaseCoord	where in the enemy base to build the new network
 // @bot				bot thing, necessary thing
-void BuildingManager::MakeNydusNetwork(const UnitTag & nydus, sc2::Point2D & enemyBaseCoord, CCBot & bot)
+void BuildingManager::MakeNydusNetwork(sc2::Point2D & enemyBaseCoord, CCBot & bot)
 {
 	// if nydus is built in base, then build one in enemy base
+	// ONLY BUILD ONCE -- this will keep trying to build over and over
+	// call at specific time?  Not every frame? 
 	// inverse of coordinates for 2player maps? 
-	bot.Actions()->UnitCommand(nydus, sc2::ABILITY_ID::BUILD_NYDUSNETWORK, enemyBaseCoord);
+	// need vision to build, or creep too? no creep needed
+	//bot.Actions()->UnitCommand(nydus, sc2::ABILITY_ID::BUILD_NYDUSNETWORK, enemyBaseCoord);
+	
+	for (auto & unitTag : bot.UnitInfo().getUnits(Players::Self))
+	{
+		// looks through list of units, checks if they are nydus networks
+		if (bot.GetUnit(unitTag)->unit_type == sc2::UNIT_TYPEID::ZERG_NYDUSNETWORK)
+		{
+			bot.Actions()->UnitCommand(unitTag, sc2::ABILITY_ID::BUILD_NYDUSWORM, enemyBaseCoord);
+		}
+	}
 }

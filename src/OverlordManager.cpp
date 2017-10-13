@@ -17,24 +17,20 @@ void OverlordManager::OverlordSpread(const UnitTag & moomoo, const sc2::Point2D 
 	// how to access map information? 
 	bot.Actions()->UnitCommand(moomoo, sc2::ABILITY_ID::MOVE, place);
 	// patrol from spatialunitcommand... 
+	// need to queue this up? 
+	// or can just put them at points
 	//if (moomoo.Unit().Point3D.x == 50 && moomoo.Unit().Point3D.y == 50)
 	//{
 		//bot.ActionsFeatureLayer()->SpatialUnitCommand(moomoo, sc2::ABILITY_ID::PATROL, sc2::Point2D(100,100), TRUE);
 	//}
 }
 
-// Tells Overlord to generate creep after arriving at some spot (need to pass in later)
-// need lair upgrade to generate creep... haven't done that yet
+// Tells Overlord to generate creep
 // @moomoo	Overlord
 // @bot		Bot thing
 void OverlordManager::GenerateCreep(const UnitTag & moomoo, CCBot & bot)
 {
-	sc2::Point3D moo = bot.GetUnit(moomoo)->pos;
-	//std::cout << "OverlordPosition: " << moo.z;
-	if (moo == sc2::Point3D(50, 50, 0))
-	{
-		bot.Actions()->UnitCommand(moomoo, sc2::ABILITY_ID::BEHAVIOR_GENERATECREEPON);
-	}
+	bot.Actions()->UnitCommand(moomoo, sc2::ABILITY_ID::BEHAVIOR_GENERATECREEPON);
 }
 
 // Tells a Overlord to go scout somewhere
@@ -58,9 +54,13 @@ void OverlordManager::Execute(CCBot & bot)
 		// looks through list of units, checks if they are overlords
 		if (bot.GetUnit(unitTag)->unit_type == sc2::UNIT_TYPEID::ZERG_OVERLORD)
 		{
-			// if they are overlords, move them to the point specified.  
+			// testing generate creep function
+			// works!  
 			OverlordManager::GenerateCreep(unitTag, bot);
-			//OverlordManager::OverlordSpread(unitTag, sc2::Point2D(50, 50), bot);
+			// if they are overlords, move them to the point specified
+			// move and then stop issuing move command?  
+			// otherwise they spaz out at 50, 50
+			OverlordManager::OverlordSpread(unitTag, sc2::Point2D(40, 50), bot);
 		}
 	}
 }
