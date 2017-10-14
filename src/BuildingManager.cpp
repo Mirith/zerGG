@@ -490,13 +490,10 @@ void BuildingManager::UpgradeBuilding(const sc2::ABILITY_ID upgrade, CCBot & bot
 // @bot				bot thing, necessary thing
 void BuildingManager::MakeNydusNetwork(sc2::Point2D & enemyBaseCoord, CCBot & bot)
 {
-	// if nydus is built in base, then build one in enemy base
-	// ONLY BUILD ONCE -- this will keep trying to build over and over
-	// call at specific time?  Not every frame? 
-	// inverse of coordinates for 2player maps? 
-	// need vision to build, or creep too? no creep needed
+	// need vision to build, no creep needed
 	//bot.Actions()->UnitCommand(nydus, sc2::ABILITY_ID::BUILD_NYDUSNETWORK, enemyBaseCoord);
-	
+	// how to tell it to build it only under the one, correct overlord? 
+
 	for (auto & unitTag : bot.UnitInfo().getUnits(Players::Self))
 	{
 		// looks through list of units, checks if they are nydus networks
