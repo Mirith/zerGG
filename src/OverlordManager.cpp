@@ -9,20 +9,22 @@
 // @moomoo	Overlord
 // @place	Coordinates of destination
 // @bot		Bot thing, necessary thing
-void OverlordManager::OverlordSpread(const UnitTag & moomoo, const sc2::Point2D & place, CCBot & bot)
+// maybe pass in vector of points to scout if possible
+// std::vector<sc2::Point2D> & blah ?
+void OverlordManager::OverlordMove(const sc2::Unit & moomoo, const sc2::Point2D & destination, CCBot & bot)
 {
-	// need to figure out where to move overlords and spread them out
-	// create array or list of valid points for each map?  
-	// make a 5x5 grid?  
 	// how to access map information? 
-	bot.Actions()->UnitCommand(moomoo, sc2::ABILITY_ID::MOVE, place);
-	// patrol from spatialunitcommand... 
-	// need to queue this up? 
-	// or can just put them at points
-	//if (moomoo.Unit().Point3D.x == 50 && moomoo.Unit().Point3D.y == 50)
-	//{
-		//bot.ActionsFeatureLayer()->SpatialUnitCommand(moomoo, sc2::ABILITY_ID::PATROL, sc2::Point2D(100,100), TRUE);
-	//}
+
+	// move overlord to given position
+	bot.Actions()->UnitCommand(moomoo, sc2::ABILITY_ID::MOVE, destination);
+}
+
+// makes and enforces overlord personal space bubble
+// @moomoos		list of overlords
+// @bot			bot thing, good thing
+void OverlordManager::PersonalSpace(const std::vector<sc2::Unit> & moomoos, CCBot & bot)
+{
+	// stuff
 }
 
 // Tells Overlord to generate creep
@@ -33,34 +35,40 @@ void OverlordManager::GenerateCreep(const UnitTag & moomoo, CCBot & bot)
 	bot.Actions()->UnitCommand(moomoo, sc2::ABILITY_ID::BEHAVIOR_GENERATECREEPON);
 }
 
-// Tells a Overlord to go scout somewhere
-// @moomoo	Overlord
-// @place	Coordinates of destination
-// @bot		Bot thing, necessary thing
-void OverlordManager::Scout(const UnitTag & scout, const sc2::Point2D & place, CCBot & bot)
-{
-	// want to send overlord to enemy base, to a place they don't see
-	// check via api? legal?
-	// or find high ground and sit there, make sure creep can be spread.  
-}
-
 // takes overlord functions and executes them, called in CCBot.cpp
 // @bot		bot thing, necessary thing
 void OverlordManager::Execute(CCBot & bot)
 {
 	// makes list of all your units
-	for (auto & unitTag : bot.UnitInfo().getUnits(Players::Self))
+	for (auto & unit : bot.UnitInfo().getUnits(Players::Self))
 	{
 		// looks through list of units, checks if they are overlords
-		if (bot.GetUnit(unitTag)->unit_type == sc2::UNIT_TYPEID::ZERG_OVERLORD)
+		if (bot.GetUnit(unit)->unit_type == sc2::UNIT_TYPEID::ZERG_OVERLORD)
 		{
 			// testing generate creep function
-			// works!  
-			OverlordManager::GenerateCreep(unitTag, bot);
+			// works! as long as bot is not moving
+			OverlordManager::GenerateCreep(unit, bot);
+
 			// if they are overlords, move them to the point specified
 			// move and then stop issuing move command?  
-			// otherwise they spaz out at 50, 50
-			OverlordManager::OverlordSpread(unitTag, sc2::Point2D(40, 50), bot);
+			// above logic added in overlord spread function
+			// gets the pointer for enemy base location
+			const BaseLocation * enemyBaseLocation = bot.Bases().getPlayerStartingBaseLocation(Players::Enemy);
+
+			// returns if enemy base is null, aka unscouted
+			if (enemyBaseLocation == nullptr)
+			{
+				return;
+			}
+
+			// if overlord is already at base location, stop moving
+			if (unit.pos.x == enemyBaseLocation->getPosition().x && unit.pos.y && enemyBaseLocation->getPosition().x)
+			{
+				return;
+			}
+
+			// call function, move overlord to enemyBaseLocation
+			OverlordManager::OverlordMove(unit, enemyBaseLocation->getPosition(), bot);
 		}
 	}
 }
