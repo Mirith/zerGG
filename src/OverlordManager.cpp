@@ -12,8 +12,6 @@
 // @bot			Bot thing, necessary thing
 void OverlordManager::OverlordMove(const sc2::Unit & moomoo, const sc2::Point2D & destination, CCBot & bot)
 {
-	// how to access map information? 
-
 	// move overlord to given position
 	bot.Actions()->UnitCommand(moomoo, sc2::ABILITY_ID::MOVE, destination);
 }
@@ -99,11 +97,11 @@ void OverlordManager::Execute(CCBot & bot)
 	for (auto & unit : bot.UnitInfo().getUnits(Players::Self))
 	{
 		// looks through list of units, checks if they are overlords
-		if (bot.GetUnit(unit)->unit_type == sc2::UNIT_TYPEID::ZERG_OVERLORD)
+		if (unit->unit_type == sc2::UNIT_TYPEID::ZERG_OVERLORD)
 		{
 			// testing generate creep function
 			// works! as long as bot is not moving
-			OverlordManager::GenerateCreep(unit, bot);
+			OverlordManager::GenerateCreep(unit->tag, bot);
 
 			// if they are overlords, move them to the point specified
 			// move and then stop issuing move command?  
@@ -118,20 +116,19 @@ void OverlordManager::Execute(CCBot & bot)
 			}
 
 			// if overlord is already at base location, stop moving
-			if (unit.pos.x == enemyBaseLocation->getPosition().x && unit.pos.y && enemyBaseLocation->getPosition().x)
+			if (unit->pos.x == enemyBaseLocation->getPosition().x && unit->pos.y && enemyBaseLocation->getPosition().x)
 			{
 				return;
 			}
 
 			// call function, move overlord to enemyBaseLocation
 			//OverlordManager::OverlordMove(unit, enemyBaseLocation->getPosition(), bot);
-			const sc2::Point2D & point = sc2::Point2D(50, 50);
+		/*	const sc2::Point2D & point = sc2::Point2D(50, 50);
 			const sc2::Point2D & point2 = sc2::Point2D(enemyBaseLocation->getPosition().x, enemyBaseLocation->getPosition().y);
 
-			std::vector<sc2::Point2D> places = { point, point2 };
+			std::vector<sc2::Point2D> places = { point, point2 };*/
 
-
-			OverlordManager::OverlordMove(unit, places, bot);
+			OverlordMove(&unit, sc2::Point2D(50, 50), bot);
 		}
 	}
 }

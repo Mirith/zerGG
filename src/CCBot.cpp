@@ -2,7 +2,6 @@
 
 #include "CCBot.h"
 #include "Util.h"
-#include "OverlordManager.h"
 
 CCBot::CCBot()
     : m_map(*this)
@@ -53,9 +52,6 @@ void CCBot::OnStep()
     m_bases.onFrame();
     m_workers.onFrame();
     m_strategy.onFrame();
-	// new
-	// sends out overlords to map
-	OverlordManager::Execute(*this);
 
     m_gameCommander.onFrame();
 
