@@ -6,6 +6,7 @@
 #include "sc2api/sc2_api.h"
 #include "sc2api/sc2_action.h"
 
+
 // Moves Overlord to point specified
 // @moomoo		Overlord
 // @destination	Coordinates of destination
@@ -13,7 +14,7 @@
 void OverlordManager::OverlordMove(const sc2::Unit & moomoo, const sc2::Point2D & destination, CCBot & bot)
 {
 	// move overlord to given position
-	bot.Actions()->UnitCommand(moomoo, sc2::ABILITY_ID::MOVE, destination);
+	bot.Actions()->UnitCommand(bot.GetUnit(moomoo.tag), sc2::ABILITY_ID::MOVE, destination, false);
 }
 
 // Moves Overlord to points specified
@@ -33,7 +34,7 @@ void OverlordManager::OverlordMove(const UnitTag & moomoo, const std::vector<sc2
 	{
 		if (!(bot.GetUnit(moomoo)->pos.x == destinations[index].x && bot.GetUnit(moomoo)->pos.y == destinations[index].y))
 		{
-			bot.Actions()->UnitCommand(moomoo, sc2::ABILITY_ID::MOVE, destinations[index]);
+			bot.Actions()->UnitCommand(bot.GetUnit(moomoo), sc2::ABILITY_ID::MOVE, destinations[index]);
 			return;
 		}
 		else
@@ -86,17 +87,17 @@ void OverlordManager::PersonalSpace(const std::vector<sc2::Unit> & moomoos, CCBo
 // @bot		Bot thing
 void OverlordManager::GenerateCreep(const UnitTag & moomoo, CCBot & bot)
 {
-	bot.Actions()->UnitCommand(moomoo, sc2::ABILITY_ID::BEHAVIOR_GENERATECREEPON);
+	bot.Actions()->UnitCommand(bot.GetUnit(moomoo), sc2::ABILITY_ID::BEHAVIOR_GENERATECREEPON);
 }
 
 // takes overlord functions and executes them, called in CCBot.cpp
 // @bot		bot thing, necessary thing
 void OverlordManager::Execute(CCBot & bot)
 {
-	// makes list of all your units
+	// loops through player's units
 	for (auto & unit : bot.UnitInfo().getUnits(Players::Self))
 	{
-		// looks through list of units, checks if they are overlords
+		// checks if they are overlords
 		if (unit->unit_type == sc2::UNIT_TYPEID::ZERG_OVERLORD)
 		{
 			// testing generate creep function
@@ -123,12 +124,15 @@ void OverlordManager::Execute(CCBot & bot)
 
 			// call function, move overlord to enemyBaseLocation
 			//OverlordManager::OverlordMove(unit, enemyBaseLocation->getPosition(), bot);
-		/*	const sc2::Point2D & point = sc2::Point2D(50, 50);
+		  /*const sc2::Point2D & point = sc2::Point2D(50, 50);
 			const sc2::Point2D & point2 = sc2::Point2D(enemyBaseLocation->getPosition().x, enemyBaseLocation->getPosition().y);
 
-			std::vector<sc2::Point2D> places = { point, point2 };*/
+			std::vector<sc2::Point2D> places = { point, point2 };
 
-			OverlordMove(&unit, sc2::Point2D(50, 50), bot);
+			OverlordMove(unit, places, bot);*/
+
+			// this and loop it is in are not getting called
+			OverlordManager::OverlordMove(*unit, sc2::Point2D(50, 50), bot);
 		}
 	}
 }

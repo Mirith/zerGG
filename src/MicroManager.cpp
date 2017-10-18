@@ -14,6 +14,7 @@ void MicroManager::setUnits(const std::vector<const sc2::Unit *> & u)
 
 void MicroManager::execute(const SquadOrder & inputOrder)
 {
+
     // Nothing to do if we have no units
     if (m_units.empty() || !(inputOrder.getType() == SquadOrderTypes::Attack || inputOrder.getType() == SquadOrderTypes::Defend))
     {
