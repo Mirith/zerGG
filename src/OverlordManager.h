@@ -8,7 +8,7 @@ class CCBot;
 namespace OverlordManager
 {
 	void OverlordMove(const sc2::Unit & moomoo, const sc2::Point2D & destination, CCBot & bot);
-	void OverlordMove(const UnitTag & moomoo, const std::vector<sc2::Point2D>& destinations, CCBot & bot);
+	void OverlordMove(const sc2::Unit & moomoo, const std::vector<sc2::Point2D> & destinations, CCBot & bot);
 	void PersonalSpace(const std::vector<sc2::Unit>& moomoos, CCBot & bot);
 	//void OverlordMove(const sc2::Unit & moomoo, const BaseLocation & destination, CCBot & bot);
 	void GenerateCreep(const UnitTag & moomoo, CCBot & bot);
