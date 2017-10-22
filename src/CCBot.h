@@ -35,6 +35,7 @@ public:
     CCBot();
     void OnGameStart() override;
     void OnStep() override;
+	void OnUnitCreated(const sc2::Unit* unit) override;
 
           BotConfig & Config();
           WorkerManager & Workers();

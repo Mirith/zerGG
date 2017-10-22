@@ -56,9 +56,16 @@ void CCBot::OnStep()
 
     m_gameCommander.onFrame();
 
-	OverlordManager::Execute(*this);
+	//OverlordManager::Execute(*this);
 
     Debug()->SendDebug();
+}
+
+// inherited
+// called when unit is created
+void CCBot::OnUnitCreated(const sc2::Unit* unit)
+{
+	OverlordManager::OnUnitCreated(unit, *this);
 }
 
 // TODO: Figure out my race
