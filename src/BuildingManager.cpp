@@ -19,6 +19,8 @@ void BuildingManager::onStart()
 	m_buildingPlacer.onStart();
 }
 
+
+
 // gets called every frame from GameCommander
 void BuildingManager::onFrame()
 {
@@ -40,13 +42,7 @@ void BuildingManager::onFrame()
 	checkForDeadTerranBuilders();           // if we are terran and a building is under construction without a worker, assign a new one    
 	checkForCompletedBuildings();           // check to see if any buildings have completed and update data structures
 
-	/*if (m_bot.Bases().getPlayerStartingBaseLocation(Players::Enemy) == nullptr)
-	{
-		sc2::Point2D & temp = m_bot.Bases().getNextExpansion(Players::Enemy);
-		MakeNydusNetwork(temp, m_bot);
-	}*/
-
-	UpgradeBuilding(sc2::ABILITY_ID::MORPH_LAIR, m_bot);
+	UpgradeBuilding(sc2::ABILITY_ID::MORPH_LAIR, sc2::UNIT_TYPEID::ZERG_HATCHERY, m_bot);
 
 	drawBuildingInformation();
 }
@@ -289,6 +285,8 @@ void BuildingManager::checkForCompletedBuildings()
 	// for each of our buildings under construction
 	for (auto & b : m_buildings)
 	{
+
+
 		if (b.status != BuildingStatus::UnderConstruction)
 		{
 			continue;
@@ -451,61 +449,21 @@ void BuildingManager::removeBuildings(const std::vector<Building> & toRemove)
 	}
 }
 
-bool LairPresent = FALSE;
-
 // upgrades a building to specified upgrade
 // add which building type to be upgraded
-// @building		the building to be upgraded
 // @upgrade			the upgrade to be performed
+// @building		the building to be upgraded
 // @bot				bot thing, important thing
-void BuildingManager::UpgradeBuilding(const sc2::ABILITY_ID upgrade, CCBot & bot)
+void BuildingManager::UpgradeBuilding(const sc2::ABILITY_ID upgrade, const sc2::UNIT_TYPEID & building, CCBot & bot)
 {
-
-	if (LairPresent)
-	{
-		return;
-	}
-
 	// cycles through all units, units include buildings too
 	for (auto & unitTag : bot.UnitInfo().getUnits(Players::Self))
 	{
-		// looks for a lair already present
-		// returns if so -- no need to upgrade multiple ones
-		if (unitTag->unit_type == sc2::UNIT_TYPEID::ZERG_LAIR)
-		{
-			LairPresent = TRUE;
-			return;
-		}
-
-		// looks if building is a hatchery, and if there isn't a lair already on the map
-		// upgrades it if it is
-		if (unitTag->unit_type == sc2::UNIT_TYPEID::ZERG_HATCHERY && LairPresent == FALSE)
+		// if unitTag matches the building to be upgraded, upgrade it
+		if (unitTag->unit_type == building)
 		{
 			bot.Actions()->UnitCommand(unitTag, upgrade);
 		}
 	}
 
-}
-
-// makes a nydus network point in enemy base
-// @nydus			the existing network in your base
-// @enemyBaseCoord	where in the enemy base to build the new network
-// @bot				bot thing, necessary thing
-void BuildingManager::MakeNydusNetwork(sc2::Point2D & enemyBaseCoord, CCBot & bot)
-{
-	// need vision to build, no creep needed
-	//bot.Actions()->UnitCommand(nydus, sc2::ABILITY_ID::BUILD_NYDUSNETWORK, enemyBaseCoord);
-	// how to tell it to build it only under the one, correct overlord? 
-
-	addBuildingTask(sc2::UNIT_TYPEID::ZERG_NYDUSNETWORK, sc2::Point2D(enemyBaseCoord));
-
-
-	//for (auto & unitTag : bot.UnitInfo().getUnits(Players::Self))
-	//{
-	//	// looks through list of units, checks if they are nydus networks
-	//	if (unitTag->unit_type == sc2::UNIT_TYPEID::ZERG_NYDUSNETWORK)
-	//	{
-	//		bot.Actions()->UnitCommand(unitTag, sc2::ABILITY_ID::BUILD_NYDUSWORM, enemyBaseCoord);
-	//	}
-	//}
 }

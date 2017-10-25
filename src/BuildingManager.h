@@ -19,7 +19,7 @@ class BuildingManager
     bool            isBuildingPositionExplored(const Building & b) const;
     void            removeBuildings(const std::vector<Building> & toRemove);
 
-	void UpgradeBuilding(const sc2::ABILITY_ID upgrade, CCBot & bot);
+	void UpgradeBuilding(const sc2::ABILITY_ID upgrade, const sc2::UNIT_TYPEID & building, CCBot & bot);
 
 	void MakeNydusNetwork(sc2::Point2D & enemyBaseCoord, CCBot & bot);
 
@@ -37,6 +37,7 @@ public:
     BuildingManager(CCBot & bot);
 
     void                onStart();
+	void				OnUnitCreated(const sc2::Unit * unit, CCBot & bot);
     void                onFrame();
     void                addBuildingTask(const sc2::UnitTypeID & type, const sc2::Point2D & desiredPosition);
     void                drawBuildingInformation();
