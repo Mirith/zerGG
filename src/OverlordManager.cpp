@@ -1,5 +1,6 @@
 // Manages behavior of Overlords aka moomoos
 #include "OverlordManager.h"
+#include "BaseLocationManager.h"
 #include "Util.h"
 #include "CCBot.h"
 #include "Common.h"
@@ -19,15 +20,34 @@ void OverlordManager::OnUnitCreated(const sc2::Unit* unit, CCBot & bot)
 	// checks if unit is overlord, and if there is a scout or not
 	if (unit->unit_type == sc2::UNIT_TYPEID::ZERG_OVERLORD && scout == false)
 	{
-		// points for testing
-		const sc2::Point2D & point = sc2::Point2D(20, 20);
-		const sc2::Point2D & point2 = sc2::Point2D(50, 50);
+		// finds enemy base location
+		const BaseLocation * enemyBaseLocation = bot.Bases().getPlayerStartingBaseLocation(Players::Enemy);
+
+		// returns if enemy base is null, aka unscouted
+		if (enemyBaseLocation == nullptr)
+		{
+			return;
+		}
+
+		//BaseLocationManager obj(bot);
+
+		// does not like this line here
+		//sc2::Point2D & temp = obj.getNextExpansion(Players::Self);
+
 		
-		const std::vector<sc2::Point2D> places = { point, point2 };
+		sc2::Point2D & temp = bot.Bases().getNextExpansion(Players::Enemy);
+
+		// points for testing
+		const sc2::Point2D & point = sc2::Point2D(50, 50);
+		//const sc2::Point2D & point2 = sc2::Point2D(50, 50);
+		//const sc2::Point2D & point2 = sc2::Point2D(enemyBaseLocation->getPosition().x, enemyBaseLocation->getPosition().y);
+
+		const std::vector<sc2::Point2D> places = { point, temp };
 
 		OverlordManager::OverlordMove(*unit, places, bot);
+		GenerateCreep(unit->tag, bot);
 
-		scout = true;
+		// scout = true;
 	}
 }
 
@@ -74,9 +94,9 @@ void OverlordManager::OverlordMove(const sc2::Unit & moomoo, const std::vector<s
 	for (sc2::UnitOrder order : moomoo.orders)
 	{
 		// if has a move command or reached last destination in vector already
-		if (order.ability_id == sc2::ABILITY_ID::MOVE 
-			|| (moomoo.pos.x == destinations[destinations.size()-1].x 
-			&& moomoo.pos.y == destinations[destinations.size()-1].y))
+		if (order.ability_id == sc2::ABILITY_ID::MOVE
+			|| (moomoo.pos.x == destinations[destinations.size() - 1].x
+				&& moomoo.pos.y == destinations[destinations.size() - 1].y))
 		{
 			// no need to keep looping
 			return;
@@ -93,7 +113,7 @@ void OverlordManager::OverlordMove(const sc2::Unit & moomoo, const std::vector<s
 		}
 	}
 
-	
+
 }
 
 // Tells Overlord to generate creep
@@ -103,6 +123,9 @@ void OverlordManager::GenerateCreep(const UnitTag & moomoo, CCBot & bot)
 {
 	bot.Actions()->UnitCommand(bot.GetUnit(moomoo), sc2::ABILITY_ID::BEHAVIOR_GENERATECREEPON);
 }
+
+// uneccesary with OnUnitCreated?
+// or needed for creep generation? 
 
 // takes overlord functions and executes them, called in CCBot.cpp
 // @bot		bot thing, necessary thing
@@ -115,24 +138,29 @@ void OverlordManager::Execute(CCBot & bot)
 		if (unit->unit_type == sc2::UNIT_TYPEID::ZERG_OVERLORD)
 		{
 			OverlordManager::GenerateCreep(unit->tag, bot);
-			
-			// finds enemy base location
-			const BaseLocation * enemyBaseLocation = bot.Bases().getPlayerStartingBaseLocation(Players::Enemy);
 
-			// returns if enemy base is null, aka unscouted
-			if (enemyBaseLocation == nullptr)
-			{
-				return;
-			}
-			
-			// points for testing
-			const sc2::Point2D & point = sc2::Point2D(20, 20);
-			const sc2::Point2D & point2 = sc2::Point2D(50, 50);
-			//const sc2::Point2D & point2 = sc2::Point2D(enemyBaseLocation->getPosition().x, enemyBaseLocation->getPosition().y);
+		//	// finds enemy base location
+		//	const BaseLocation * enemyBaseLocation = bot.Bases().getPlayerStartingBaseLocation(Players::Enemy);
 
-			const std::vector<sc2::Point2D> places = { point, point2 };
-			
-			OverlordMove(*unit, places, bot);
+		//	// returns if enemy base is null, aka unscouted
+		//	if (enemyBaseLocation == nullptr)
+		//	{
+		//		return;
+		//	}
+
+		//	BaseLocationManager obj(bot);
+
+		//	sc2::Point2D & temp = obj.getNextExpansion(Players::Enemy);
+		//	
+		//	// points for testing
+		//	const sc2::Point2D & point = sc2::Point2D(20, 20);
+		//	const sc2::Point2D & point2 = sc2::Point2D(50, 50);
+		//	//const sc2::Point2D & point2 = sc2::Point2D(enemyBaseLocation->getPosition().x, enemyBaseLocation->getPosition().y);
+
+		//	const std::vector<sc2::Point2D> places = { point, temp };
+		//	
+		//	OverlordMove(*unit, places, bot);
+		//
 		}
 	}
 }

@@ -56,7 +56,9 @@ void CCBot::OnStep()
 
     m_gameCommander.onFrame();
 
-	//OverlordManager::Execute(*this);
+	OverlordManager::Execute(*this);
+	
+	
 
     Debug()->SendDebug();
 }

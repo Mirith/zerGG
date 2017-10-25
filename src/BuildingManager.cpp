@@ -40,7 +40,12 @@ void BuildingManager::onFrame()
 	checkForDeadTerranBuilders();           // if we are terran and a building is under construction without a worker, assign a new one    
 	checkForCompletedBuildings();           // check to see if any buildings have completed and update data structures
 
-	MakeNydusNetwork(sc2::Point2D(50, 50), m_bot);
+	/*if (m_bot.Bases().getPlayerStartingBaseLocation(Players::Enemy) == nullptr)
+	{
+		sc2::Point2D & temp = m_bot.Bases().getNextExpansion(Players::Enemy);
+		MakeNydusNetwork(temp, m_bot);
+	}*/
+
 	UpgradeBuilding(sc2::ABILITY_ID::MORPH_LAIR, m_bot);
 
 	drawBuildingInformation();
@@ -492,12 +497,15 @@ void BuildingManager::MakeNydusNetwork(sc2::Point2D & enemyBaseCoord, CCBot & bo
 	//bot.Actions()->UnitCommand(nydus, sc2::ABILITY_ID::BUILD_NYDUSNETWORK, enemyBaseCoord);
 	// how to tell it to build it only under the one, correct overlord? 
 
-	for (auto & unitTag : bot.UnitInfo().getUnits(Players::Self))
-	{
-		// looks through list of units, checks if they are nydus networks
-		if (unitTag->unit_type == sc2::UNIT_TYPEID::ZERG_NYDUSNETWORK)
-		{
-			bot.Actions()->UnitCommand(unitTag, sc2::ABILITY_ID::BUILD_NYDUSWORM, enemyBaseCoord);
-		}
-	}
+	addBuildingTask(sc2::UNIT_TYPEID::ZERG_NYDUSNETWORK, sc2::Point2D(enemyBaseCoord));
+
+
+	//for (auto & unitTag : bot.UnitInfo().getUnits(Players::Self))
+	//{
+	//	// looks through list of units, checks if they are nydus networks
+	//	if (unitTag->unit_type == sc2::UNIT_TYPEID::ZERG_NYDUSNETWORK)
+	//	{
+	//		bot.Actions()->UnitCommand(unitTag, sc2::ABILITY_ID::BUILD_NYDUSWORM, enemyBaseCoord);
+	//	}
+	//}
 }
