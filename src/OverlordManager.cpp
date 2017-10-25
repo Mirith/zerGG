@@ -7,10 +7,6 @@
 #include "sc2api/sc2_api.h"
 #include "sc2api/sc2_action.h"
 
-
-// change to scoutNeeded later? triggered at x supply?  why not global?
-bool scout = false;
-
 // is called in CCBot's (inherited) OnUnitCreated function
 // supposed to scout
 // @unit		unit created
@@ -18,7 +14,7 @@ bool scout = false;
 void OverlordManager::OnUnitCreated(const sc2::Unit* unit, CCBot & bot)
 {
 	// checks if unit is overlord, and if there is a scout or not
-	if (unit->unit_type == sc2::UNIT_TYPEID::ZERG_OVERLORD && scout == false)
+	if (unit->unit_type == sc2::UNIT_TYPEID::ZERG_OVERLORD)
 	{
 		// finds enemy base location
 		const BaseLocation * enemyBaseLocation = bot.Bases().getPlayerStartingBaseLocation(Players::Enemy);
@@ -28,26 +24,18 @@ void OverlordManager::OnUnitCreated(const sc2::Unit* unit, CCBot & bot)
 		{
 			return;
 		}
-
-		//BaseLocationManager obj(bot);
-
-		// does not like this line here
-		//sc2::Point2D & temp = obj.getNextExpansion(Players::Self);
-
 		
-		sc2::Point2D & temp = bot.Bases().getNextExpansion(Players::Enemy);
+		//sc2::Point2D & temp = bot.Bases().getNextExpansion(Players::Enemy);
+		sc2::Point2D & temp = bot.Bases().getNextExpansion(Players::Self);
 
 		// points for testing
 		const sc2::Point2D & point = sc2::Point2D(50, 50);
 		//const sc2::Point2D & point2 = sc2::Point2D(50, 50);
 		//const sc2::Point2D & point2 = sc2::Point2D(enemyBaseLocation->getPosition().x, enemyBaseLocation->getPosition().y);
 
-		const std::vector<sc2::Point2D> places = { point, temp };
+		const std::vector<sc2::Point2D> places = { point, sc2::Point2D(temp.y, temp.x) };
 
 		OverlordManager::OverlordMove(*unit, places, bot);
-		GenerateCreep(unit->tag, bot);
-
-		// scout = true;
 	}
 }
 
@@ -124,10 +112,10 @@ void OverlordManager::GenerateCreep(const UnitTag & moomoo, CCBot & bot)
 	bot.Actions()->UnitCommand(bot.GetUnit(moomoo), sc2::ABILITY_ID::BEHAVIOR_GENERATECREEPON);
 }
 
-// uneccesary with OnUnitCreated?
-// or needed for creep generation? 
+
 
 // takes overlord functions and executes them, called in CCBot.cpp
+// only does creep... moving is handled by onunitcreated
 // @bot		bot thing, necessary thing
 void OverlordManager::Execute(CCBot & bot)
 {
@@ -138,29 +126,6 @@ void OverlordManager::Execute(CCBot & bot)
 		if (unit->unit_type == sc2::UNIT_TYPEID::ZERG_OVERLORD)
 		{
 			OverlordManager::GenerateCreep(unit->tag, bot);
-
-		//	// finds enemy base location
-		//	const BaseLocation * enemyBaseLocation = bot.Bases().getPlayerStartingBaseLocation(Players::Enemy);
-
-		//	// returns if enemy base is null, aka unscouted
-		//	if (enemyBaseLocation == nullptr)
-		//	{
-		//		return;
-		//	}
-
-		//	BaseLocationManager obj(bot);
-
-		//	sc2::Point2D & temp = obj.getNextExpansion(Players::Enemy);
-		//	
-		//	// points for testing
-		//	const sc2::Point2D & point = sc2::Point2D(20, 20);
-		//	const sc2::Point2D & point2 = sc2::Point2D(50, 50);
-		//	//const sc2::Point2D & point2 = sc2::Point2D(enemyBaseLocation->getPosition().x, enemyBaseLocation->getPosition().y);
-
-		//	const std::vector<sc2::Point2D> places = { point, temp };
-		//	
-		//	OverlordMove(*unit, places, bot);
-		//
 		}
 	}
 }

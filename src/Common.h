@@ -1,6 +1,7 @@
 #pragma once
 
 #include "sc2api/sc2_api.h"
+#include "sc2api/sc2_action.h"
 #include "BotAssert.h"
 #include <iostream>
 #include <vector>

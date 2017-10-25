@@ -3,6 +3,7 @@
 #include "CCBot.h"
 #include "Util.h"
 #include "OverlordManager.h"
+#include "NydusManager.h"
 
 CCBot::CCBot()
     : m_map(*this)
@@ -68,6 +69,7 @@ void CCBot::OnStep()
 void CCBot::OnUnitCreated(const sc2::Unit* unit)
 {
 	OverlordManager::OnUnitCreated(unit, *this);
+	NydusManager::OnUnitCreated(unit, *this);
 }
 
 // TODO: Figure out my race
