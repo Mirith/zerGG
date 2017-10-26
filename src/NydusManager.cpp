@@ -17,6 +17,12 @@ void NydusManager::OnUnitCreated(const sc2::Unit* unit, CCBot & bot)
 		temp = sc2::Point2D(unit->pos.x, unit->pos.y);
 	}
 
+	if (!NydusBuilt)
+	{
+		sc2::Point2D & temp = bot.Bases().getNextExpansion(Players::Self);
+		MakeNydusNetwork(sc2::Point2D(temp.y, temp.x), bot);
+	}
+
 	//for (auto & unitTag : bot.UnitInfo().getUnits(Players::Self))
 	//{
 	//	// if it is a building that makes offensive units, rally them to nydus
@@ -29,12 +35,6 @@ void NydusManager::OnUnitCreated(const sc2::Unit* unit, CCBot & bot)
 	//}
 }
 
-//// put in onframe? 
-//if (LairPresent && !NydusBuilt)
-//{
-//	sc2::Point2D & temp = m_bot.Bases().getNextExpansion(Players::Self);
-//	MakeNydusNetwork(sc2::Point2D(temp.y, temp.x), m_bot);
-//}
 
 // makes a nydus network point in enemy base
 // @nydus			the existing network in your base
@@ -43,13 +43,13 @@ void NydusManager::OnUnitCreated(const sc2::Unit* unit, CCBot & bot)
 // does this happen bc botconfig file or because of programming? check timing in game
 void NydusManager::MakeNydusNetwork(sc2::Point2D & enemyBaseCoord, CCBot & bot)
 {
-	for (auto & unitTag : bot.UnitInfo().getUnits(Players::Self))
+	for (auto & unit : bot.UnitInfo().getUnits(Players::Self))
 	{
 		// check if there is a nydus worm already
-		if (unitTag->unit_type == sc2::UNIT_TYPEID::ZERG_NYDUSCANAL)
+		if (unit->unit_type == sc2::UNIT_TYPEID::ZERG_NYDUSCANAL)
 		{
 			// unloads all in nydus
-			bot.Actions()->UnitCommand(unitTag, sc2::ABILITY_ID::UNLOADALL_NYDUSWORM);
+			bot.Actions()->UnitCommand(unit, sc2::ABILITY_ID::UNLOADALL_NYDUSWORM);
 			NydusBuilt = true;
 		}
 
@@ -59,9 +59,9 @@ void NydusManager::MakeNydusNetwork(sc2::Point2D & enemyBaseCoord, CCBot & bot)
 		}
 
 		// if no worm already, builds one
-		if (unitTag->unit_type == sc2::UNIT_TYPEID::ZERG_NYDUSNETWORK)
+		if (unit->unit_type == sc2::UNIT_TYPEID::ZERG_NYDUSNETWORK)
 		{
-			bot.Actions()->UnitCommand(unitTag, sc2::ABILITY_ID::BUILD_NYDUSWORM, enemyBaseCoord);
+			bot.Actions()->UnitCommand(unit, sc2::ABILITY_ID::BUILD_NYDUSWORM, enemyBaseCoord);
 		}
 	}
 

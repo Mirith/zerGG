@@ -68,6 +68,7 @@ void CCBot::OnStep()
 // called when unit is created
 void CCBot::OnUnitCreated(const sc2::Unit* unit)
 {
+	m_unitInfo.onFrame();
 	OverlordManager::OnUnitCreated(unit, *this);
 	NydusManager::OnUnitCreated(unit, *this);
 }
